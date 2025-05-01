@@ -1,45 +1,86 @@
-// Planets array
-const planets = [
-  ["Pluto", 0.06],
-  ["Neptune", 1.148],
-  ["Uranus", 0.917],
-  ["Saturn", 1.139],
-  ["Jupiter", 2.64],
-  ["Mars", 0.3895],
-  ["Moon", 0.1655],
-  ["Earth", 1],
-  ["Venus", 0.9032],
+// Define the planets with their gravity factors
+var planets = [
+  ["Sun", 27.9],
   ["Mercury", 0.377],
-  ["Sun", 27.9]
+  ["Venus", 0.9032],
+  ["Earth", 1],
+  ["Moon", 0.1655],
+  ["Mars", 0.3895],
+  ["Jupiter", 2.64],
+  ["Saturn", 1.139],
+  ["Uranus", 0.917],
+  ["Neptune", 1.148],
+  ["Pluto", 0.06],
 ];
 
-const dropdown = document.getElementById('planets');
+// Populate the dropdown element with the data found in the planets array.
+function populatePlanetsDropdown() {
+  var planetSelect = document.getElementById("planets");
+  // Clear existing options if any
+  planetSelect.innerHTML = "";
 
-// Populate the dropdown with planet names
-planets.forEach(([name]) => {
-  const option = document.createElement('option');
-  option.value = name;
-  option.textContent = name;
-  dropdown.appendChild(option);
-});
-
-// Calculates weight on a given planet
-function calculateWeight(weight, planet) {
-  const match = planets.find(([name]) => name === planet);
-  return match ? (weight * match[1]).toFixed(2) : null;
+  planets.forEach(function (planet) {
+    var option = document.createElement("option");
+    option.value = planet[0];
+    option.textContent = planet[0];
+    planetSelect.appendChild(option);
+  });
 }
 
-// Handles button click
-function handleClickEvent() {
-  const weight = parseFloat(document.getElementById('user-weight').value);
-  const planet = document.getElementById('planets').value;
-  const output = document.getElementById('output');
-  const result = calculateWeight(weight, planet);
-
-
-  output.textContent = `If you were on ${planet}, you would weigh ${result}lbs!`;
+// Function to calculate weight
+function calculateWeight(weight, planetName) {
+  var gravityFactor = planets.find((planet) => planet[0] === planetName)[1];
+  return weight * gravityFactor;
 }
 
+// Handle button click event
+function handleClickEvent(e) {
+  // Declare a variable called userWeight
+  var userWeight = parseFloat(document.getElementById("user-weight").value);
+  // Declare a variable called planetName
+  var planetName = document.getElementById("planets").value;
+  // Calculate weight
+  if (isNaN(userWeight) || userWeight <= 0) {
+    document.getElementById("output").textContent =
+      "Please enter a valid weight.";
+    return;
+  }
 
-// Attach the event listener to the button
-document.getElementById('calculate-button').addEventListener('click', handleClickEvent);
+  var result = calculateWeight(userWeight, planetName);
+
+  // Correctly format the output
+  let formattedResult = result.toFixed(2);
+
+  // Display the message
+  document.getElementById(
+    "output"
+  ).textContent = `If you were on ${planetName}, you would weigh ${formattedResult}lbs!`;
+}
+
+// Set the #calculate-button element's onclick method
+document.getElementById("calculate-button").onclick = handleClickEvent;
+
+// Automatically populate dropdown on load
+populatePlanetsDropdown();
+
+//Page background code
+function stars() {
+  let e = document.createElement("div");
+  e.setAttribute("class", "star");
+  document.body.appendChild(e);
+  e.style.left = Math.random() * +innerWidth + "px";
+
+  let size = Math.random() * 12;
+  let duration = Math.random() * 3;
+
+  e.style.fontSize = 12 + "px";
+  e.style.animationDuration = 2 + duration + "s";
+  setTimeout(function () {
+    document.body.removeChild(e);
+  }, 5000);
+}
+
+setInterval(function () {
+  stars();
+}, 50);
+// Page background Code End
